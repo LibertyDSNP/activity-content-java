@@ -1,0 +1,157 @@
+@startuml
+ActivityContentBase <|-- ActivityContentNote
+ActivityContentBase <|-- ActivityContentProfile
+ActivityContentTag <|-- ActivityContentHashtag
+ActivityContentTag <|-- ActivityContentMention
+ActivityContentAttachment <|-- ActivityContentAudio
+ActivityContentAttachment <|-- ActivityContentImage
+ActivityContentAttachment <|-- ActivityContentVideo
+ActivityContentAttachment <|-- ActivityContentLink
+ActivityContentMediaLink <|-- ActivityContentAudioLink
+ActivityContentMediaLink <|-- ActivityContentImageLink
+ActivityContentMediaLink <|-- ActivityContentVideoLink
+ActivityContentNote *-- ActivityContentAttachment
+ActivityContentNote *-- ActivityContentLocation
+ActivityContentNote *-- ActivityContentTag
+ActivityContentAudio *-- ActivityContentAudioLink
+ActivityContentImage *-- ActivityContentImageLink
+ActivityContentVideo *-- ActivityContentVideoLink
+ActivityContentAudioLink *-- ActivityContentHash
+ActivityContentImageLink *-- ActivityContentHash
+ActivityContentVideoLink *-- ActivityContentHash
+ActivityContentLocation *-- ActivityContentLocation.Unit
+ActivityContentAudioLink *-- ActivityContentAudioLink.MediaType
+ActivityContentImageLink *-- ActivityContentImageLink.MediaType
+ActivityContentVideoLink *-- ActivityContentVideoLink.MediaType
+ActivityContentProfile *-- ActivityContentImageLink
+ActivityContentProfile *-- ActivityContentLocation
+ActivityContentProfile *-- ActivityContentTag
+
+interface ActivityContentBase {
+    context: String
+    type: String
+    name: String?
+    published: Date?
+    location: ActivityContentLocation?
+    tag: List<ActivityContentTag>?
+    String toJson()
+}
+
+interface ActivityContentNote {
+    mediaType: String
+    content: String
+    attachment: List<ActivityContentAttachment>?
+}
+
+interface ActivityContentProfile {
+    summary: String?
+    icon: List<ActivityContentImageLink>?
+}
+
+interface ActivityContentLocation {
+    type: String
+    name: String
+    accuracy: Float?
+    altitude: Float?
+    latitude: Float?
+    longitude: Float?
+    radius: Float?
+    units: Unit?
+}
+
+enum ActivityContentLocation.Unit {
+        CENTIMETER,
+        FEET,
+        INCHES,
+        KILOMETER,
+        METER,
+        MILES
+    }
+
+interface ActivityContentTag
+
+interface ActivityContentHashtag {
+    name: String
+}
+
+interface ActivityContentMention {
+    type: String
+    id: DSNPUserURI
+    name: String?
+}
+
+interface ActivityContentAttachment {
+    type: String
+    name: String?
+}
+
+interface ActivityContentAudio {
+    url: List<ActivityContentAudioLink>
+    duration: String?
+}
+
+interface ActivityContentImage {
+    url: List<ActivityContentImageLink>
+}
+
+interface ActivityContentVideo {
+    url: List<ActivityContentVideoLink>
+    duration: String?
+}
+
+interface ActivityContentLink {
+    href: String
+}
+
+interface ActivityContentMediaLink {
+    type: String
+    href: String
+    hash: List<ActivityContentHash>
+}
+
+interface ActivityContentAudioLink {
+    mediaType: MediaType
+}
+
+enum ActivityContentAudioLink.MediaType {
+    MP3
+    OGG
+    WebM
+    Other
+}
+
+interface ActivityContentImageLink {
+    mediaType: MediaType
+    height: Int?
+    width: Int?
+}
+
+enum ActivityContentImageLink.MediaType {
+    JPEG
+    PNG
+    SVG
+    WebP
+    GIF
+    Other
+}
+
+interface ActivityContentVideoLink {
+    mediaType: MediaType
+    height: Int?
+    width: Int?
+}
+
+enum ActivityContentVideoLink.MediaType {
+    MPEG
+    OGG
+    WEBM
+    H265
+    MP4
+    Other
+}
+
+interface ActivityContentHash {
+    algorithm: String
+    value: String
+}
+@enduml

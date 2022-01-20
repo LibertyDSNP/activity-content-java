@@ -1,0 +1,127 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'java'
+    id 'jacoco'
+    id 'maven-publish'
+    id 'signing'
+    id("org.jetbrains.dokka") version "1.6.10"
+}
+
+group 'org.dsnp.activitycontent'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    api "com.google.code.gson:gson:2.8.9"
+    implementation 'org.web3j:core:5.0.0'
+
+    // Unit Testing
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'io.mockk:mockk:1.12.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier "javadoc"
+    from dokkaHtml.outputDirectory
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+    archives jar
+}
+
+signing {
+    def signingKey = System.getenv("SIGNING_KEY")
+    def signingPassword = System.getenv("SIGNING_PASSWORD")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+            groupId 'org.dsnp.activitycontent'
+            artifactId 'activitycontent'
+            version '1.0.0'
+
+            from components.java
+
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+        }
+    }
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description 'DSNP Activity Content SDK for Java'
+            name 'Activity Content SDK'
+            url 'https://github.com/LibertyDSNP/activity-content-java'
+            organization {
+                name 'org.dsnp'
+                url 'https://dsnp.org'
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/LibertyDSNP/activity-content-java/issues'
+            }
+            licenses {
+                license {
+                    name 'Apache License 2.0'
+                    url 'https://github.com/LibertyDSNP/activity-content-java/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/LibertyDSNP/activity-content-java'
+                connection 'scm:git:git://github.com/LibertyDSNP/activity-content-java.git'
+                developerConnection 'scm:git:ssh://git@github.com:/LibertyDSNP/activity-content-java.git'
+            }
+            developers {
+                developer {
+                    name 'ProjectLiberty'
+                }
+            }
+        }
+    }
+}

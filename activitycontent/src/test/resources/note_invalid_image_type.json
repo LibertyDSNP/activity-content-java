@@ -1,0 +1,25 @@
+{
+  "content": "test content",
+  "attachment": [
+    {
+      "url": [
+        {
+          "mediaType": "audio/mpeg",
+          "hash": [
+            {
+              "value": "0xabcdef0000000000000000000000000000000000000000000000000000000000",
+              "algorithm": "keccak256"
+            }
+          ],
+          "href": "http://www.dsnp.org/exampleAudioContent1.mp3",
+          "type": "Link"
+        }
+      ],
+      "duration": "PT11S",
+      "type": "Image"
+    }
+  ],
+  "type": "Note",
+  "mediaType": "text/plain",
+  "@context": "https://www.w3.org/ns/activitystreams"
+}

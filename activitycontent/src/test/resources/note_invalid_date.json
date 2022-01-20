@@ -1,0 +1,7 @@
+{
+  "name": "test name",
+  "published": "01/01/1970",
+  "type": "Note",
+  "mediaType": "text/plain",
+  "@context": "https://www.w3.org/ns/activitystreams"
+}

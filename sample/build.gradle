@@ -1,0 +1,22 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+}
+
+group 'org.dsnp.sample'
+version '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'org.dsnp.sample.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation project(':activitycontent')
+}
+
+task prepareKotlinBuildScriptModel {}

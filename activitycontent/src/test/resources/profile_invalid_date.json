@@ -1,0 +1,6 @@
+{
+  "name": "user 1",
+  "published": "01/01/1970",
+  "type": "Profile",
+  "@context": "https://www.w3.org/ns/activitystreams"
+}

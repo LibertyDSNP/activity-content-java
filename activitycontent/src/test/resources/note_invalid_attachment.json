@@ -1,0 +1,12 @@
+{
+  "content": "test content",
+  "attachment": [
+    {
+      "base64EncodedContent": "dGVzdA==",
+      "type": "File"
+    }
+  ],
+  "type": "Note",
+  "mediaType": "text/plain",
+  "@context": "https://www.w3.org/ns/activitystreams"
+}
